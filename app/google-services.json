@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "12088303225",
+    "project_id": "ramoilmill-77cdb",
+    "storage_bucket": "ramoilmill-77cdb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12088303225:android:b3853fb9fcdcbd55c3bea8",
+        "android_client_info": {
+          "package_name": "com.example.ramoilmillattendance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA72CTX3Jz5k4wM1mTxPv8UP1FVZJc5kUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
