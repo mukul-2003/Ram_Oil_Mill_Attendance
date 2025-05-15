@@ -41,7 +41,7 @@ fun ViewWorkerListScreen(navController: NavController) {
         context = context,
         drawerState = rememberDrawerState(DrawerValue.Closed),
         scope = scope,
-        screenTitle = "Faculty List"
+        screenTitle = "Worker List"
     ) {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             if (errorMessage.isNotEmpty()) {

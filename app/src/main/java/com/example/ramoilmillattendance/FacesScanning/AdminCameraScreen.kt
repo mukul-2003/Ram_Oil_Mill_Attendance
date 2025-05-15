@@ -226,8 +226,21 @@ private fun processRecognitionFlow(
 
 private fun markAttendance(uid: String, context: android.content.Context) {
     val db = FirebaseFirestore.getInstance()
-    val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-    val data = mapOf("attendance" to mapOf(today to "Present"))
+    val now = Date()
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+
+    val date = dateFormat.format(now)
+    val time = timeFormat.format(now)
+
+    val data = mapOf(
+        "attendance" to mapOf(
+            date to mapOf(
+                "status" to "Present",
+                "time" to time
+            )
+        )
+    )
 
     db.collection("attendance").document(uid)
         .set(data, SetOptions.merge())

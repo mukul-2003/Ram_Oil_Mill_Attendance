@@ -41,15 +41,18 @@ fun ModifyWorkerAttendanceScreen(navController: NavController, uid: String) {
             try {
                 val doc = FirebaseFirestore.getInstance().collection("attendance")
                     .document(uid).get().await()
-                val data = doc.get("attendance") as? Map<String, String> ?: emptyMap()
+                val data = doc.get("attendance") as? Map<String, Map<String, Any>> ?: emptyMap()
 
-                attendanceList = data.map { (date, status) ->
+                attendanceList = data.map { (date, value) ->
+                    val status = value["status"] as? String ?: "Absent"
+                    val isHalfDay = status == "Half Day"
                     EditableAttendanceEntry(
                         date = date,
                         status = if (status == "Present" || status == "Absent") status else "Half Day",
-                        isHalfDay = status == "Half Day"
+                        isHalfDay = isHalfDay
                     )
                 }.sortedBy { it.date }
+
 
             } catch (e: Exception) {
                 errorMessage = "Failed to load attendance"
@@ -62,13 +65,21 @@ fun ModifyWorkerAttendanceScreen(navController: NavController, uid: String) {
     fun saveAttendance() {
         scope.launch {
             try {
+                val now = java.util.Date()
+                val timeFormat = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
+                val currentTime = timeFormat.format(now)
+
                 val updatedMap = attendanceList.associate {
-                    it.date to when {
-                        it.isHalfDay -> "Half Day"
-                        it.status == "Present" -> "Present"
-                        else -> "Absent"
-                    }
+                    it.date to mapOf(
+                        "status" to when {
+                            it.isHalfDay -> "Half Day"
+                            it.status == "Present" -> "Present"
+                            else -> "Absent"
+                        },
+                        "time" to currentTime
+                    )
                 }
+
 
                 FirebaseFirestore.getInstance().collection("attendance")
                     .document(uid)

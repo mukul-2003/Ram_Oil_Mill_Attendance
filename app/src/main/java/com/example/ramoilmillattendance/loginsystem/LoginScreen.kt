@@ -38,7 +38,7 @@ fun LoginScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your logo
+            painter = painterResource(id = R.drawable.logo), // Replace with your logo
             contentDescription = "Logo",
             modifier = Modifier.size(150.dp)
         )

@@ -35,8 +35,13 @@ fun ViewWorkerAttendanceScreen(navController: NavController, uid: String) {
             try {
                 val doc = FirebaseFirestore.getInstance().collection("attendance")
                     .document(uid).get().await()
-                val data = doc.get("attendance") as? Map<String, String>
-                attendanceData = data ?: emptyMap()
+                val data = doc.get("attendance") as? Map<String, Map<String, Any>>
+                attendanceData = data?.mapValues { entry ->
+                    val status = entry.value["status"] as? String ?: "Absent"
+                    val time = entry.value["time"] as? String ?: ""
+                    "$status at $time".trim()
+                } ?: emptyMap()
+
             } catch (e: Exception) {
                 errorMessage = "Failed to load attendance"
             } finally {
@@ -63,9 +68,9 @@ fun ViewWorkerAttendanceScreen(navController: NavController, uid: String) {
                 if (errorMessage.isNotEmpty()) {
                     Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
                 } else {
-                    val presentCount = attendanceData.values.count { it == "Present" }
-                    val absentCount = attendanceData.values.count { it == "Absent" }
-                    val halfDayCount = attendanceData.values.count { it == "Half Day" }
+                    val presentCount = attendanceData.values.count { it.startsWith("Present") }
+                    val absentCount = attendanceData.values.count { it.startsWith("Absent") }
+                    val halfDayCount = attendanceData.values.count { it.startsWith("Half Day") }
 
                     AttendanceCountRow(
                         present = presentCount,
